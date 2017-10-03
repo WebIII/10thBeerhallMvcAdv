@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Beerhall.Models.Domain.Brewer>
+
+@{
+    ViewData["Title"] = "Brewers";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-controller="Brewer" asp-action="Create">Add a brewer</a>
+</p>
+
+<table class="table table-striped table-condensed table-bordered">
+    <tr>
+        <th>Name</th>
+        <th>Street</th>
+        <th>Location</th>
+        <th class="text-right">Turnover</th>
+        <th class="text-right">Date established</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Street</td>
+            <td>@item.Location?.PostalCode @item.Location?.Name</td>
+            <td class="text-right">@(item.Turnover?.ToString("c") ?? "-")</td>
+            <td class="text-right">@(item.DateEstablished?.Date.ToString("d") ?? "-")</td>
+            <td>
+                <a asp-controller="Brewer" asp-action="Detail" asp-route-id="@item.BrewerId">Detail</a> |
+                <a asp-controller="Brewer" asp-action="Edit" asp-route-id="@item.BrewerId">Edit</a> |
+                <a asp-controller="Brewer" asp-action="Delete" asp-route-id="@item.BrewerId">Delete</a>
+            </td>
+        </tr>
+    }
+</table>
+<p>Total turnover: @($"{(int)ViewData["TotalTurnover"]:N0} €") </p>

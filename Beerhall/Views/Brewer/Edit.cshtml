@@ -1,0 +1,57 @@
+﻿@model Beerhall.Models.BrewerViewModels.EditViewModel
+
+@{
+    ViewData["Title"] = (bool)ViewData["IsEdit"] ? "Edit brewer" : "Create brewer";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Street"></label>
+        <input asp-for="Street" class="form-control" />
+        <span asp-validation-for="Street" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PostalCode"></label>
+        <select asp-for="PostalCode" asp-items="@(ViewData["Locations"] as SelectList)" class="form-control">
+            <option value="">-- select location --</option>
+        </select>
+        <span asp-validation-for="PostalCode" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContactEmail"></label>
+        <input asp-for="ContactEmail" class="form-control" />
+        <span asp-validation-for="ContactEmail" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DateEstablished"></label>
+        <input asp-for="DateEstablished" class="form-control" />
+        <span asp-validation-for="DateEstablished" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Turnover"></label>
+        <input asp-for="Turnover" class="form-control" />
+        <span asp-validation-for="Turnover" class="text-danger"></span>
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit">Save</button>
+        <a asp-action="Index" class="btn btn-default">Cancel</a>
+    </div>
+</form>
+
+@section scripts {
+    <script asp-src-include="lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script asp-src-include="lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}

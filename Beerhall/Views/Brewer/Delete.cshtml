@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Brewers";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h4>
+    Please confirm you want to delete brewer @ViewData["Name"]...
+</h4>
+<form asp-action="Delete" method="post">
+    <div>
+        <button class="btn btn-primary" type="submit">Delete</button>
+        <a asp-action="Index" class="btn btn-default">Cancel</a>
+    </div>
+</form>
