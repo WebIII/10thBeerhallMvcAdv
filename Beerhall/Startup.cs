@@ -50,8 +50,10 @@ namespace Beerhall
             services.AddScoped<IBrewerRepository, BrewerRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBeerRepository, BeerRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<BeerhallDataInitializer>();
             services.AddScoped<CartSessionFilter>();
+            services.AddScoped<CustomerFilter>();
             services.AddSession();
             services.AddMvc();
         }
