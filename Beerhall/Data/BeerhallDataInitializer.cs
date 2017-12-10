@@ -1,6 +1,7 @@
 ﻿using Beerhall.Models.Domain;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace Beerhall.Data
             _dbContext.Database.EnsureDeleted();
             if (_dbContext.Database.EnsureCreated())
             {
-                await InitializeUsers();
+                await InitializeUsersAndCustomers();
                 Location bavikhove = new Location { Name = "Bavikhove", PostalCode = "8531" };
                 Location roeselare = new Location { Name = "Roeselare", PostalCode = "8800" };
                 Location puurs = new Location { Name = "Puurs", PostalCode = "2870" };
@@ -59,7 +60,7 @@ namespace Beerhall.Data
                 Brewer duvelMoortgat = new Brewer("Duvel Moortgat", puurs, "Breendonkdorp 28");
                 _dbContext.Brewers.Add(duvelMoortgat);
                 duvelMoortgat.AddBeer("Duvel", 8.5, 2.0M);
-                duvelMoortgat.AddBeer("Vedett",6.2, 2.0M);
+                duvelMoortgat.AddBeer("Vedett", 6.2, 2.0M);
                 duvelMoortgat.AddBeer("Maredsous", 8, 2.2M);
                 duvelMoortgat.AddBeer("Liefmans Kriekbier", 5, 1.8M);
                 duvelMoortgat.AddBeer("La Chouffe", 8.0, 2.2M);
@@ -90,7 +91,7 @@ namespace Beerhall.Data
             }
         }
 
-        private async Task InitializeUsers()
+        private async Task InitializeUsersAndCustomers()
         {
             string eMailAddress = "beermaster@hogent.be";
             ApplicationUser user = new ApplicationUser { UserName = eMailAddress, Email = eMailAddress };
@@ -101,6 +102,18 @@ namespace Beerhall.Data
             user = new ApplicationUser { UserName = eMailAddress, Email = eMailAddress };
             await _userManager.CreateAsync(user, "P@ssword1");
             await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "customer"));
+
+            var customer = new Customer
+            {
+                Email = eMailAddress,
+                FirstName = "Jan",
+                Name = "De man",
+                Location = _dbContext.Locations.SingleOrDefault(l => l.PostalCode == "9700"),
+                Street = "Nederstraat 5"
+            };
+
+            _dbContext.Customers.Add(customer);
+            _dbContext.SaveChanges();
         }
     }
 }
