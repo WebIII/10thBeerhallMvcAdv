@@ -15,6 +15,7 @@ using Beerhall.Models.Domain;
 using Beerhall.Data.Repositories;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Security.Claims;
+using Beerhall.Filters;
 
 namespace Beerhall
 {
@@ -50,6 +51,7 @@ namespace Beerhall
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBeerRepository, BeerRepository>();
             services.AddScoped<BeerhallDataInitializer>();
+            services.AddScoped<CartSessionFilter>();
             services.AddSession();
             services.AddMvc();
         }

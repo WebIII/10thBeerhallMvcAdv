@@ -5,3 +5,4 @@
 // a specific target and scoped to a namespace, type, member, etc.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1090:Call 'ConfigureAwait(false)'.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1203:Use AttributeUsageAttribute.")]
