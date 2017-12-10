@@ -23,8 +23,10 @@ namespace Beerhall.Tests.Controllers
             _context = new DummyApplicationDbContext();
             _beerRepository = new Mock<IBeerRepository>();
             _beerRepository.Setup(b => b.GetAll()).Returns(_context.Beers);
+            var locationRepository = new Mock<ILocationRepository>();
+            locationRepository.Setup(b => b.GetAll()).Returns(_context.Locations);
 
-            _controller = new CartController(_beerRepository.Object)
+            _controller = new CartController(_beerRepository.Object, locationRepository.Object)
             {
                 TempData = new Mock<ITempDataDictionary>().Object
             };
@@ -97,5 +99,30 @@ namespace Beerhall.Tests.Controllers
             Assert.Equal(0, _cart.NumberOfItems);
         }
         #endregion
+
+        #region Checkout HttpGet
+
+        [Fact]
+        public void Checkout_EmptyCart_RedirectsToIndexOfStore()
+        {
+            var actionResult = _controller.Checkout(new Cart()) as RedirectToActionResult;
+            Assert.Equal("Index", actionResult?.ActionName);
+            Assert.Equal("Store", actionResult?.ControllerName);
+        }
+
+        [Fact]
+        public void Checkout_NonEmptyCart_PassesACheckOutViewModelInViewResultModel()
+        {
+            var actionResult = _controller.Checkout(_cart) as ViewResult;
+            var model = actionResult?.Model as CheckOutViewModel;
+            Assert.Null(model.ShippingViewModel.DeliveryDate);
+            Assert.Null(model.ShippingViewModel.PostalCode);
+            Assert.Null(model.ShippingViewModel.Street);
+            Assert.False(model.ShippingViewModel.Giftwrapping);
+            Assert.Equal(3, model.Locations.Count());
+        }
+
+        #endregion
+
     }
 }
