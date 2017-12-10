@@ -6,3 +6,4 @@
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1090:Call 'ConfigureAwait(false)'.")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1203:Use AttributeUsageAttribute.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1170:Use read-only auto-implemented property.")]
