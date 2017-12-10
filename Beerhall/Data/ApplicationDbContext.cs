@@ -9,6 +9,7 @@ namespace Beerhall.Data
     {
         public DbSet<Brewer> Brewers { get; set; }
         public DbSet<Location> Locations { get; set; }
+        public DbSet<Beer> Beers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
