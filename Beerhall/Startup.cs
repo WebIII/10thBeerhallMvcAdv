@@ -50,6 +50,7 @@ namespace Beerhall
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<IBeerRepository, BeerRepository>();
             services.AddScoped<BeerhallDataInitializer>();
+            services.AddSession();
             services.AddMvc();
         }
 
@@ -69,7 +70,7 @@ namespace Beerhall
 
             app.UseStaticFiles();
             app.UseStatusCodePages();
-
+            app.UseSession();
             app.UseAuthentication();
 
             app.UseMvc(routes =>
