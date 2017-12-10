@@ -77,7 +77,26 @@ namespace Beerhall.Controllers
         [ServiceFilter(typeof(CustomerFilter))]
         public IActionResult Checkout(Customer customer, Cart cart, [Bind(Prefix = "ShippingViewModel")]ShippingViewModel shippingVm)
         {
-            throw new NotImplementedException();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (cart.NumberOfItems == 0)
+                        return RedirectToAction("Index");
+                    Location location = _locationRepository.GetBy(shippingVm.PostalCode);
+                    customer.PlaceOrder(cart, shippingVm.DeliveryDate, shippingVm.Giftwrapping, shippingVm.Street, location);
+                    _customerRepository.SaveChanges();
+                    cart.Clear();
+                    TempData["message"] = "Thank you for your order!";
+                    return RedirectToAction("Index", "Store");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+            }
+            IEnumerable<Location> locations = _locationRepository.GetAll().OrderBy(l => l.Name);
+            return View(new CheckOutViewModel(locations, shippingVm));
         }
     }
 }
