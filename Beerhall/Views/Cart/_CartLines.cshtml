@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Beerhall.Models.CartViewModels.IndexViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Product</th>
+            <th class="text-right">Unit price</th>
+            <th class="text-right">Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var line in Model)
+        {
+            <tr>
+                <td class="text-right">@($"{line.Quantity} x")</td>
+                <td>@line.Beer</td>
+                <td class="text-right">@($"{line.Price:N2} €")</td>
+                <td class="text-right">@($"{line.SubTotal:N2} €")</td>
+                <td>
+                    <form method="post" asp-action="Remove" asp-route-id="@line.BeerId">
+                        <button type="submit" class="btn btn-xs"><span class="glyphicon-remove glyphicon"></span> Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" class="text-right">@($"Total: {ViewData["Total"]:N2} €")</td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
