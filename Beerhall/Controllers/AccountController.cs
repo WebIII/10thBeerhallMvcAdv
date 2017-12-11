@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Beerhall.Models.AccountViewModels;
 using Beerhall.Services;
 using Beerhall.Models.Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
 
 namespace Beerhall.Controllers
 {
@@ -20,17 +22,23 @@ namespace Beerhall.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly ICustomerRepository _customerRepository;
+        private readonly ILocationRepository _locationRepository;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ICustomerRepository customerRepository,
+            ILocationRepository locationRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _customerRepository = customerRepository;
+            _locationRepository = locationRepository;
         }
 
         [TempData]
@@ -205,6 +213,11 @@ namespace Beerhall.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Locations"] = new SelectList(
+             _locationRepository.GetAll().OrderBy(l => l.Name),
+             nameof(Location.PostalCode),
+             nameof(Location.Name),
+             null);
             return View();
         }
 
@@ -222,6 +235,16 @@ namespace Beerhall.Controllers
                     result = await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "customer"));
                 if (result.Succeeded)
                 {
+                    var customer = new Customer
+                    {
+                        Email = model.Email,
+                        Name = model.Name,
+                        FirstName = model.FirstName,
+                        Street = model.Street,
+                        Location = _locationRepository.GetBy(model.PostalCode)
+                    };
+                    _customerRepository.Add(customer);
+                    _customerRepository.SaveChanges();
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
